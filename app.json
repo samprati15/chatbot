@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "AI Assistant",
+    "slug": "ai-assistant-chatbot",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "backgroundColor": "#0F172A"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aiassistant.chatbot",
+      "infoPlist": {
+        "NSContactsUsageDescription": "Used to look up a contact's number when you ask the assistant to call someone."
+      }
+    },
+    "android": {
+      "package": "com.aiassistant.chatbot",
+      "permissions": ["READ_CONTACTS"],
+      "adaptiveIcon": {
+        "backgroundColor": "#0F172A"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow $(PRODUCT_NAME) to access your contacts so the assistant can call people for you."
+        }
+      ]
+    ]
+  }
+}
