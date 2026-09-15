@@ -39,3 +39,29 @@ export async function findOpenTaskByTitle(query: string): Promise<Task | undefin
   const q = query.trim().toLowerCase();
   return tasks.find((t) => !t.done && t.title.toLowerCase().includes(q));
 }
+
+/** Finds any task (done or not) by fuzzy (substring) title match, for chat commands like "delete groceries". */
+export async function findTaskByTitle(query: string): Promise<Task | undefined> {
+  const tasks = await getTasks();
+  const q = query.trim().toLowerCase();
+  return tasks.find((t) => t.title.toLowerCase().includes(q));
+}
+
+/** Marks every open task done in one shot, for "complete all my tasks". Returns how many changed. */
+export async function completeAllTasks(): Promise<number> {
+  const tasks = await getTasks();
+  const openCount = tasks.filter((t) => !t.done).length;
+  await setJSON(
+    TASKS_KEY,
+    tasks.map((t) => ({ ...t, done: true }))
+  );
+  return openCount;
+}
+
+/** Removes every completed task, for "clear completed tasks". Returns how many were removed. */
+export async function clearCompletedTasks(): Promise<number> {
+  const tasks = await getTasks();
+  const remaining = tasks.filter((t) => !t.done);
+  await setJSON(TASKS_KEY, remaining);
+  return tasks.length - remaining.length;
+}

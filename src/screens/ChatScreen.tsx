@@ -15,7 +15,16 @@ import { colors } from "../theme/colors";
 import { Message } from "../types";
 import { getJSON, setJSON } from "../services/storage";
 import { parseIntent } from "../services/intent";
-import { addTask, findOpenTaskByTitle, getTasks, toggleTask } from "../services/tasks";
+import {
+  addTask,
+  clearCompletedTasks,
+  completeAllTasks,
+  deleteTask,
+  findOpenTaskByTitle,
+  findTaskByTitle,
+  getTasks,
+  toggleTask,
+} from "../services/tasks";
 import { askAssistant, LLMError } from "../services/llm";
 import { loadSettings } from "../services/settings";
 import { CallingError, openDialer, resolveCallTarget } from "../services/calling";
@@ -33,6 +42,8 @@ const WELCOME = makeMessage(
     '• "What\'s the capital of France?"\n' +
     '• "Remind me to buy milk"\n' +
     '• "List my tasks"\n' +
+    '• "Complete all tasks"\n' +
+    '• "Delete task milk"\n' +
     '• "Call Mom"'
 );
 
@@ -88,6 +99,28 @@ export default function ChatScreen() {
           }
           await toggleTask(task.id);
           persist([...withUser, makeMessage("assistant", `Marked "${task.title}" as done.`)]);
+          break;
+        }
+        case "task_done_all": {
+          const count = await completeAllTasks();
+          const reply = count > 0 ? `Marked all ${count} open task${count === 1 ? "" : "s"} as done.` : "You had no open tasks to complete.";
+          persist([...withUser, makeMessage("assistant", reply)]);
+          break;
+        }
+        case "task_delete": {
+          const task = await findTaskByTitle(intent.title);
+          if (!task) {
+            persist([...withUser, makeMessage("assistant", `I couldn't find a task matching "${intent.title}".`)]);
+            break;
+          }
+          await deleteTask(task.id);
+          persist([...withUser, makeMessage("assistant", `Deleted "${task.title}".`)]);
+          break;
+        }
+        case "task_clear_done": {
+          const count = await clearCompletedTasks();
+          const reply = count > 0 ? `Cleared ${count} completed task${count === 1 ? "" : "s"}.` : "No completed tasks to clear.";
+          persist([...withUser, makeMessage("assistant", reply)]);
           break;
         }
         case "call": {
