@@ -3,8 +3,10 @@
 A mobile chatbot that:
 
 - **Answers questions** — general Q&A powered by the Anthropic Claude API (bring your own API key).
-- **Manages your tasks** — add, list, and complete tasks from the Tasks tab or straight from chat
-  (e.g. "remind me to buy milk", "list my tasks", "done with milk").
+- **Manages your tasks** — add, list, complete, and delete tasks from the Tasks tab or straight from
+  chat (e.g. "remind me to buy milk", "list my tasks", "done with milk", "complete all tasks",
+  "delete task milk", "clear completed tasks"). Task commands apply immediately, no confirmation
+  step.
 - **Calls people for you** — say "call Mom" or "call +1 555 123 4567" and the assistant looks up the
   contact and opens your phone's dialer with the number ready to go.
 
@@ -23,6 +25,13 @@ npx expo start
 ```
 
 Then open the app in Expo Go (scan the QR code) or an iOS/Android simulator.
+
+### Running the tests
+
+```bash
+npm test        # jest — intent parsing + task CRUD
+npm run typecheck
+```
 
 ### Enable Q&A
 
@@ -54,6 +63,7 @@ src/
     calling.ts               Contact lookup + native dialer (expo-contacts, Linking)
     settings.ts              Load/save API key (SecureStore) + model choice
     storage.ts                Small AsyncStorage/SecureStore helpers
+    __tests__/                Jest tests for intent parsing + task CRUD
   theme/colors.ts             Shared color palette
 ```
 
