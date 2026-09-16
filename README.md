@@ -1,4 +1,17 @@
-# AI Assistant (React Native / Expo)
+# AI Assistant
+
+This repo has two client implementations of the same product, plus a backend for the second one:
+
+- **`/` (this directory)** — the original React Native / Expo app. Client-only: it calls the
+  Anthropic API directly with a key you enter in-app, and stores tasks/chat on-device.
+- **[`flutter_app/`](flutter_app/README.md)** — a Flutter rewrite with real accounts (signup/login)
+  and server-stored tasks/chat, backed by:
+- **[`backend/`](backend/README.md)** — a Node/Express API (auth, tasks, chat/Claude proxy) that
+  only the Flutter app talks to. The React Native app above needs no backend.
+
+Both clients implement the same three features and the same stance on calling — see below.
+
+## React Native / Expo app (this directory)
 
 A mobile chatbot that:
 
@@ -10,14 +23,14 @@ A mobile chatbot that:
 - **Calls people for you** — say "call Mom" or "call +1 555 123 4567" and the assistant looks up the
   contact and opens your phone's dialer with the number ready to go.
 
-## Why calling opens the dialer instead of dialing silently
+### Why calling opens the dialer instead of dialing silently
 
 iOS and Android deliberately do not let third-party apps place a phone call without the user
 tapping something — this stops apps from making calls (and running up charges) behind your back.
 So "call for me" here means the realistic, permitted version: the assistant resolves the contact
 name to a number and hands you a pre-filled dialer. You confirm with one tap.
 
-## Getting started
+### Getting started
 
 ```bash
 npm install
@@ -46,7 +59,7 @@ The first time you ask the assistant to call someone by name, it will request co
 to look up their number. You can always say the phone number directly instead ("call 5551234567")
 to skip that.
 
-## Project structure
+### Project structure
 
 ```
 App.tsx                     App entry, wraps navigation
@@ -67,7 +80,7 @@ src/
   theme/colors.ts             Shared color palette
 ```
 
-## Notes / next steps
+### Notes / next steps
 
 - Chat commands are matched with simple patterns (see `src/services/intent.ts`); anything that
   doesn't match a task/call command falls through to the LLM.

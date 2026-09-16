@@ -5,8 +5,9 @@ web-build/
 *.log
 .env
 .DS_Store
-ios/
-android/
+# Expo prebuild output for THIS app only (not flutter_app/'s native folders)
+/ios/
+/android/
 *.jks
 *.p8
 *.p12
